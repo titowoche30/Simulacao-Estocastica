@@ -153,7 +153,7 @@ def binominal(n,p,printar,prob,plotar):
             F = pr
             i = 0
             while u>=F:
-                pr = (( c*(n-1) )/ (i+1)) * pr
+                pr = (( c*(n-i) )/ (i+1)) * pr
                 F = F + pr
                 i+=1
             ##--------------------Até aqui---------------------------#    
