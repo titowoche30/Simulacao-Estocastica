@@ -6,10 +6,10 @@ plt.rcParams.update({'font.size': 12})
 
 
 ##------------------GERACAO BERNOULLI(0,1)--------------------##
-def bernoulli(n,p,printar,prob,plotar):
+def bernoulli(n,p,m,printar,prob,plotar):
     #Gera n_amostras sequencias de tamanho n de variaveis aleatorias de Bernoulli
     vetAux = []
-    n_amostras = 9
+    n_amostras = m
     tam_amostras = n
     n_plot = int(np.sqrt(n_amostras))
     
@@ -35,7 +35,8 @@ def bernoulli(n,p,printar,prob,plotar):
             i+=1    
         #---------------------------Até aqui-------------------------#
         vetAux.append(X)
-        
+    #return vetAux
+    
     if printar: print('{} amostras de {} variaveis bernoulli com p={}: {}'.format(n_amostras,n,p,vetAux))        
     
     if prob:
@@ -72,12 +73,12 @@ def bernoulli(n,p,printar,prob,plotar):
     
 
 ###--------------------------GERACAO POISSON-----------------------------##
-def poisson(lamba,printar,prob,plotar):        
+def poisson(lamba,n,m,printar,prob,plotar):        
     #Gera n_amostras sequencias de tamanho n de variaveis aleatorias de Poisson
     #1 numero aleatorio pra cada numero de poisson
     
-    n_amostras = 25
-    tam_amostras = 100
+    n_amostras = m
+    tam_amostras = n
     n_plot = int(np.sqrt(n_amostras))
     vetAux = []
     
@@ -137,9 +138,9 @@ def poisson(lamba,printar,prob,plotar):
     
     
 ###-------------------GERACAO BINOMIAL------------------##
-def binominal(n,p,printar,prob,plotar):
-    n_amostras = 25
-    tam_amostras = 100              
+def binominal(n,p,m,printar,prob,plotar):
+    n_amostras = m
+    tam_amostras = n              
     vetAux = []
     n_plot = int(np.sqrt(n_amostras))
     
@@ -159,6 +160,7 @@ def binominal(n,p,printar,prob,plotar):
             ##--------------------Até aqui---------------------------#    
             vet.append(i)    
         vetAux.append(vet)
+    #return vetAux
     
     if printar: print(n_amostras,'amostras de tamanho',tam_amostras,'de variaveis aleatorias da binomial=',vetAux)
     
@@ -199,6 +201,6 @@ def binominal(n,p,printar,prob,plotar):
  
     
 #np.random.seed(30)
-bernoulli(100,0.65,False,False,True)
-poisson(2.75,False,False,True)
-binominal(5,0.6,False,False,True)
+#bernoulli(100,0.65,25,False,False,True)
+#poisson(2.75,5,10,False,False,True)
+#binominal(5,0.6,100,False,False,True)
