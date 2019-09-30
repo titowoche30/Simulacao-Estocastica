@@ -1,5 +1,5 @@
 import numpy as np
-from geracaoVariaveisAleatorias import binominal,bernoulli
+from geracaoVariaveisAleatorias import binomial,bernoulli
 
 
 #%%
@@ -165,7 +165,7 @@ def props(amostra):
 #%%
 def quest4(n,m):
     #X acertos em n=100 tentativas com p=1/100 de cada tentativa = binomial(n=100,p=1/100)
-    amostras=binominal(n,1/n,m,False,False,False)
+    amostras=binomial(m,n,1/n,ret=True)
     p_bino = []
     var_bino = []
     for i in amostras:
@@ -204,7 +204,7 @@ def quest5(vetor):
     return vet
 #%%
 def quest6(n,p):
-    return bernoulli(n,p,1,False,False,False)
+    return bernoulli(1,n,p,ret=True)
 #%%
 def quest7(n):
     n_lancamentos = []
