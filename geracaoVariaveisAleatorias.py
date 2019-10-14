@@ -76,6 +76,7 @@ def bernoulli(m,n,p,printar=None,prob=None,plotar=None,ret=None):
     
         plt.show()
 
+
 ###--------------------------GERACAO POISSON-----------------------------##
 def poisson(m,n,lamba,printar=None,prob=None,plotar=None,ret=None):        
     #Gera m sequencias de tamanho n de variaveis aleatorias de Poisson
@@ -145,6 +146,7 @@ def poisson(m,n,lamba,printar=None,prob=None,plotar=None,ret=None):
                tam_amostras+=tam_amostras
         plt.show()
     
+    
 ###-------------------GERACAO BINOMIAL------------------##
 def binomial(m,n,p,printar=None,prob=None,plotar=None,ret=None):
     n_amostras = m
@@ -156,6 +158,7 @@ def binomial(m,n,p,printar=None,prob=None,plotar=None,ret=None):
         vet = []        
         for i in range(tam_amostras):
             ##----A variavel aleatoria Binomial é gerada daqui-----#
+            print('---------------------------')
             u = np.random.rand()
             c = p / (1-p)
             pr = (1-p)**n
@@ -164,6 +167,7 @@ def binomial(m,n,p,printar=None,prob=None,plotar=None,ret=None):
             while u>=F:
                 pr = (( c*(n-i) )/ (i+1)) * pr
                 F = F + pr
+                print('F=',F)
                 i+=1
             ##--------------------Até aqui---------------------------#    
             vet.append(i)    
@@ -212,6 +216,150 @@ def binomial(m,n,p,printar=None,prob=None,plotar=None,ret=None):
                tam_amostras+=tam_amostras
         
         plt.show()
+
+
+###--------------------------GERACAO POISSON-----------------------------##
+def poisson(m,n,lamba,printar=None,prob=None,plotar=None,ret=None):        
+    #Gera m sequencias de tamanho n de variaveis aleatorias de Poisson
+    
+    n_amostras = m
+    tam_amostras = n
+    n_plot = int(np.sqrt(n_amostras))
+    amostras = []
+    
+    for k in range(n_amostras):
+        vet = []
+        for i in range(tam_amostras):
+            ##----A variavel aleatoria de Poisson é gerada daqui-----#
+            I = 0
+            u = np.random.rand()
+            p = np.exp(-lamba)
+            F = p
+            while u>=F:
+                p = (lamba*p) / (I+1)
+                F = F + p
+                I+=1
+            ##--------------------Até aqui---------------------------#    
+            vet.append(I)    
+        amostras.append(vet)
+    
+    if ret: return amostras
+    
+    if printar: print(n_amostras,'amostras de tamanho',tam_amostras,'de variaveis aleatorias da Poisson=',amostras)
+    
+    if prob:
+        cont = 1
+        for i in amostras:
+            print('Amostra:',cont)
+            print('Media da Poisson=',np.mean(i))
+            print('Desvio Padrao da Poisson=',np.std(i),'\n')
+            cont+=1
+
+
+        amostrasFlat = [var for amostra in amostras for var in amostra]            
+        print('Media de todas amostras=',np.mean(amostrasFlat))
+        print('Desvio Padrao de todas amostras=',np.std(amostrasFlat))
+            
+            
+    if plotar:
+        pois = np.random.poisson(lam=lamba,size=tam_amostras)
+        plt.figure(figsize=(8,8))
+        sns.distplot(pois,kde=False,bins=15,hist_kws={'alpha':1.0,
+                                                      'weights': np.ones(len(pois)) / len(pois),
+                                                      'edgecolor': 'white',
+                                                      'linewidth': 1})
+    
+        plt.title('Poisson do numpy de tamanho {};lambda={}'.format(tam_amostras,lamba),fontdict={'fontsize': 15})
+        plt.xlabel('x')
+        plt.ylabel('P(X=x)')
+        
+        fig, ax = plt.subplots(nrows = n_plot, ncols = n_plot,constrained_layout=True,figsize=(10,8))
+        fig.suptitle('Poisson simulada com {} Amostras de tamanho {};lamba={}'.format(n_amostras,tam_amostras,lamba),y=1.05,fontsize=15)
+        for i in range(n_plot):
+            for j in range(n_plot):
+               ax[i,j].set_xlabel('x')
+               ax[i,j].set_ylabel('P(X=x)')
+               ax[i,j].set_xticks(np.unique(amostras[i*n_plot+j]))
+               sns.distplot(amostras[i*n_plot+j],kde=False,bins=10,ax=ax[i,j],hist_kws={'alpha':1.0,
+                                                                                      'weights': np.ones(len(amostras[i*n_plot+j])) / len(amostras[i*n_plot+j]),
+                                                                                      'edgecolor': 'white',
+                                                                                      'linewidth': 1})
+               tam_amostras+=tam_amostras
+        plt.show()
+        
+
+###--------------------------GERACAO BINOMIAL NEGATIVA-----------------------------##
+def binomial_negativa(m,n,r,p,printar=None,prob=None,plotar=None,ret=None):        
+    #Gera m sequencias de tamanho n de binomial negativa tipo 2(a tentativa onde ocorre o r-esimo sucesso)
+    
+    n_amostras = m
+    tam_amostras = n
+    n_plot = int(np.sqrt(n_amostras))
+    amostras = []
+    
+    for k in range(n_amostras):
+        vet = []
+        for i in range(tam_amostras):
+            j = r
+            u = np.random.rand()
+            p0 = p**r
+            F = p0
+            while u>=F:
+                p0 =  ((j*(1-p))* p0)/(j+1-r) 
+                F = F + p0
+                j+=1
+            vet.append(j)    
+        amostras.append(vet)
+        
+
+    
+    if ret: return amostras
+    
+    if printar: print(n_amostras,'amostras de tamanho',tam_amostras,'de variaveis aleatorias da Binomial Negativa=',amostras)
+    
+    if prob:
+        cont = 1
+        for i in amostras:
+            print('Amostra:',cont)
+            print('Media da Binomial Negativa=',np.mean(i))
+            print('Desvio Padrao da Binomial Negativa=',np.std(i),'\n')
+            cont+=1
+
+
+        amostrasFlat = [var for amostra in amostras for var in amostra]            
+        print('Media de todas amostras=',np.mean(amostrasFlat))
+        print('Desvio Padrao de todas amostras=',np.std(amostrasFlat))
+            
+            
+    if plotar:
+        #A do numpy eh a tipo I = Numero de falhas antes de ver o r-esimo sucesso
+        bin_neg = np.random.negative_binomial(r,p,size=tam_amostras)
+        plt.figure(figsize=(8,8))
+        sns.distplot(bin_neg,kde=False,bins=15,hist_kws={'alpha':1.0,
+                                                        'weights': np.ones(len(bin_neg)) / len(bin_neg),
+                                                        'edgecolor': 'white',
+                                                        'linewidth': 1})
+    
+        plt.title('Binomial Negativa I do numpy de tamanho {};r={};p={}'.format(tam_amostras,r,p),fontdict={'fontsize': 15})
+        plt.xlabel('x')
+        plt.ylabel('P(X=x)')
+        
+        fig, ax = plt.subplots(nrows = n_plot, ncols = n_plot,constrained_layout=True,figsize=(10,8))
+        fig.suptitle('Binomial Negativa II simulada com {} Amostras de tamanho {};r={};p={}'.format(n_amostras,tam_amostras,r,p),y=1.05,fontsize=15)
+        
+        for i in range(n_plot):
+            for j in range(n_plot):
+               ax[i,j].set_xlabel('x')
+               ax[i,j].set_ylabel('P(X=x)')
+               #ax[i,j].set_xticks(np.unique(amostras[i*n_plot+j]))
+               sns.distplot(amostras[i*n_plot+j],kde=False,bins=10,ax=ax[i,j],hist_kws={'alpha': 1.0,
+                                                                                       'weights': np.ones(len(amostras[i*n_plot+j])) / len(amostras[i*n_plot+j]),
+                                                                                       'edgecolor': 'white',
+                                                                                       'linewidth': 1})
+               tam_amostras+=tam_amostras
+        plt.show()
+        
+        
 def exponencial(m,n,lamba,printar=None,prob=None,plotar=None,ret=None):
     #m amostras de tamanho n
     amostras = []
@@ -340,6 +488,7 @@ def normal(m,n,media,desvio_padrao,printar=None,prob=None,plotar=None,ret=None):
 #np.random.seed(30)
 #bernoulli(9,100,p=0.65,printar=False,prob=True,plotar=True,ret=False)
 #poisson(9,100,lamba=0.5,printar=False,prob=True,plotar=True,ret=False)
-#binominal(9,100,p=0.6,printar=False,prob=True,plotar=True,ret=False)
+#binomial(9,100,p=0.6,printar=False,prob=True,plotar=True,ret=False)
 #normal(9,1000,media=4,desvio_padrao=0.37,printar=False,prob=True,plotar=True,ret=False)
 #exponencial(9,100,lamba=0.5,printar=False,prob=True,plotar=True,ret=False)
+binomial_negativa(9,100,r=5,p=0.56,printar=False,prob=True,plotar=True,ret=False)
